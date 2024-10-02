@@ -5,7 +5,7 @@ const initialGameBoard = [
     [null, null, null],
     [null, null, null]
 ]
-export default function GameBoard(){
+export default function GameBoard({onSelectSquare, symbol}){
     const [gameBoard, setGameBoard] = useState(initialGameBoard);
 
     function handleSelectSquare(rowIndex,colIndex){
@@ -14,9 +14,11 @@ export default function GameBoard(){
             // ma crearne copie e modificare quelli , in quanto state è un array
             //e deve aveve un valore di riferimento
             const updateBoard = [...prevGameBoard.map((innerArray) => [...innerArray])]
-            updateBoard[rowIndex][colIndex] = 'X';
+            updateBoard[rowIndex][colIndex] = symbol;
             return updateBoard;
         })
+
+        onSelectSquare();
     }
     return (
         <ol id="game-board">
