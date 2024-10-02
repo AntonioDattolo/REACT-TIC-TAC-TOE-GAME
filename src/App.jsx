@@ -1,5 +1,6 @@
 import { Fragment, useState } from "react"
-import Player from "./components/Player"
+import Player from "./components/Player";
+import GameBoard from "./components/GameBoard";
 function App() {
 
 
@@ -16,7 +17,9 @@ function App() {
             symbol="O"
           />
         </ol>
-        GAME BOARD
+        <section>
+          <GameBoard />
+        </section>
       </div>
       LOG
     </main>
