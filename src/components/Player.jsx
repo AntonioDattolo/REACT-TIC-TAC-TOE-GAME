@@ -1,21 +1,28 @@
 import { useState } from "react";
 
 export default function Player({name, symbol}){
-    
+    const [ playerEdit , setPlayerEdit] = useState(name);
+
     const [isEditing, setIsEditing] = useState(false);
 
     function handleEditClick(){
-        setIsEditing(true)
+        setIsEditing((isEditing) => !isEditing)
+        
     };
+    // se lo state dipende da un value precedente, è altamente raccomandato passare una funziona come argomento
+    //e non --> !value,così si avrà la certezza che REACT lavorerà sempre ocn l'ultimo state disponibile
+    function handleChange(event){
+        setPlayerEdit(event.target.value)
+    }
 
-    function handleSaveClick(){
-        setIsEditing(false)
-    };
+    let playerName = <span className="player-name">{playerEdit}</span>;
 
-    let playerName = <span className="player-name">{name}</span>;
+    let editButton = 'Edit';
 
     if(isEditing){
-        playerName =  <input type="text" required />
+        playerName =  <input type="text" value={playerEdit} onChange={handleChange} required />
+        // impostare defaultValue farà in modo che abbiamo un valore iniziale preimpostato che può essere modificato
+        editButton = 'Save'
     };
    
     return (
@@ -26,8 +33,8 @@ export default function Player({name, symbol}){
                 <span className="player-symbol">{symbol}</span>
             </span>
 
-            {isEditing=== false ? <button onClick={handleEditClick}>Edit</button> :  <button onClick={handleSaveClick}>Save</button>}
-               
+            <button onClick={handleEditClick}>{editButton}</button>
+           
         </li>
         </>
     );
