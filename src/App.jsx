@@ -4,13 +4,15 @@ import GameBoard from "./components/GameBoard";
 import Log from "./components/log";
 import GameOver from "./components/GameOver";
 import { WINNING_COMBINATIONS } from "./store/winning-combinations";
+//giocatori di default
+const PLAYERS = { X : 'Player 1', O : 'Player 2'};
 
-const initialGameBoard = [
+const INITIAL_GAME_BOARD = [
   [null, null, null],
   [null, null, null],
   [null, null, null]
 ]
-
+//logica dei turni
 function deriveActivePlayer(gameTurns){
   //creare una costante di default per il primo turno(player1)
   let currentPlayer = 'X';
@@ -19,43 +21,11 @@ function deriveActivePlayer(gameTurns){
     //nel caso ci sia stato, il turno va al giocatore successivo 
     currentPlayer = 'O';
   }
-
   return currentPlayer
 }
-
-
-function App() {
-  //qui definiamo il tuo del giocatore , in uno state che poi 
-  //passeremo ai componenti figli(Player/GameBoard)
-  // const[activePlayer , setActivePlayer] = useState('X');
-
-
-  //Creo uno state->array con i player di default.Che andrò a 
-  //collegare ad una funzione -> handleNameChanged
-  const [players, setPlayers] = useState({ 'X' : 'Player 1', 'O' : 'Player 2'})
-
-  const [gameTurns, setGameTurns] = useState([]);
-
-  const activePlayer = deriveActivePlayer(gameTurns);
-
-  let gameBoard = [...initialGameBoard.map(array =>[...array])];
-  // se invece usiamo gameBoard = initialGameBoard, l'array iniziale, verrò sovrascritto e
-  // perso durante la partita,impendendo il restart
-  
+//logica condizioni di vittoria
+function winningCondition(gameBoard, players){
   let winner;
-
-  for(const turn of gameTurns){
-      //scorriamo i Turni come dei giri, se turn è un array vuoto non verrai eseguito il ciclo(js concept)
-      //e in questo ciclo vogliamo estrarre le informazioni dei turni che stiamo memorizzando in updateTurns in App
-      const {
-          square ,
-          player 
-      } = turn
-
-      const {row, col} = square
-      gameBoard[row][col] = player
-  }
-
   for(const combination of WINNING_COMBINATIONS){
     const firstSymbolSquare = gameBoard[combination[0].row][combination[0].column]
     const secondSymbolSquare = gameBoard[combination[1].row][combination[1].column]
@@ -68,6 +38,40 @@ function App() {
         winner = players[firstSymbolSquare]
       }
   }
+
+  return winner;
+}
+//funzione che crea il tabellone
+function deriveGameBoard(gameTurns){
+  let gameBoard = [...INITIAL_GAME_BOARD.map(array =>[...array])];
+  // se invece usiamo gameBoard = INITIAL_GAME_BOARD, l'array iniziale, verrò sovrascritto e
+  // perso durante la partita,impendendo il restart
+  
+  for(const turn of gameTurns){
+    //scorriamo i Turni come dei giri, se turn è un array vuoto non verrai eseguito il ciclo(js concept)
+    //e in questo ciclo vogliamo estrarre le informazioni dei turni che stiamo memorizzando in updateTurns in App
+    const {
+        square ,
+        player 
+    } = turn
+
+    const {row, col} = square
+    gameBoard[row][col] = player
+  }
+  return gameBoard;
+}
+
+function App() {
+  //Creo uno state->array con i player di default.Che andrò a 
+  //collegare ad una funzione -> handleNameChanged
+  const [players, setPlayers] = useState(PLAYERS)
+  //questo state definizione i turni dei giocatori
+  const [gameTurns, setGameTurns] = useState([]);
+  const activePlayer = deriveActivePlayer(gameTurns);
+  // funzione di creazione delle tabelle con relativi simboli
+  const gameBoard = deriveGameBoard(gameTurns)
+  // funzione contenente la logica per le condizioni di vittoria o di pareggio
+  const winner = winningCondition(gameBoard, players);
 
   const draw = gameTurns.length === 9 && !winner;
 
@@ -112,13 +116,13 @@ function App() {
       <div id="game-container">
         <ol id="players" className="highlight-player">
           <Player
-            name="player 1"
+            name={PLAYERS.X}
             symbol="X"
             active={activePlayer === 'X'}
             onChangeName={handlePlayerNameChanged}
           />
           <Player
-            name="player 2"
+            name={PLAYERS.O}
             symbol="O"
             active={activePlayer === 'O'}
             onChangeName={handlePlayerNameChanged}
@@ -131,12 +135,12 @@ function App() {
             onSelectSquare={handleSelectSquare}
             turns={gameTurns}
             board={gameBoard}
-            // symbol={activePlayer}
           />
         </section>
       </div>
       <Log 
         turns={gameTurns}
+        players={PLAYERS}
       />
     </main>
   )
