@@ -2,6 +2,7 @@ import { Fragment, useState } from "react"
 import Player from "./components/Player";
 import GameBoard from "./components/GameBoard";
 import Log from "./components/log";
+import GameOver from "./components/GameOver";
 import { WINNING_COMBINATIONS } from "./store/winning-combinations";
 
 const initialGameBoard = [
@@ -61,6 +62,8 @@ function App() {
       }
   }
 
+  const draw = gameTurns === 9 && !winner;
+
   function handleSelectSquare(rowIndex, colIndex){
     // se il player è x allora diventa o dopo l'aggiornamento di state
     //setActivePlayer((currentActPlayer) => currentActPlayer === 'X' ? 'O' : 'X');
@@ -96,7 +99,7 @@ function App() {
           />
         </ol>
         <section>
-          {winner && <p>You WON, {winner}!</p>}
+          {(winner || draw) && <GameOver winner={winner}/>}
           <GameBoard 
             onSelectSquare={handleSelectSquare}
             turns={gameTurns}
