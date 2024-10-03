@@ -7,7 +7,9 @@ export default function Player({name, symbol, active, onChangeName}){
 
     function handleEditClick(){
         setIsEditing((isEditing) => !isEditing)
-        //se si sceglie di cambiare il nome si richiama la funziona per passare i dati
+        // qui dove ho la variabile che attiva e disattiva l'edit, passo la funzione
+        // per recuperare il dato dal figlio
+        //  se si sceglie di cambiare il nome si richiama la funziona per passare i dati
         // dal componente figlio al padre
         if(isEditing){
             onChangeName(symbol,playerEdit)

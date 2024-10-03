@@ -28,6 +28,10 @@ function App() {
   //qui definiamo il tuo del giocatore , in uno state che poi 
   //passeremo ai componenti figli(Player/GameBoard)
   // const[activePlayer , setActivePlayer] = useState('X');
+
+
+  //Creo uno state->array con i player di default.Che andrò a 
+  //collegare ad una funzione -> handleNameChanged
   const [players, setPlayers] = useState({ 'X' : 'Player 1', 'O' : 'Player 2'})
 
   const [gameTurns, setGameTurns] = useState([]);
@@ -90,6 +94,10 @@ function App() {
     setGameTurns([]);
   }
 
+
+  // con questa funzione, imposterò il symbol 'X' ||'O' presi dal componente figlio
+  // e corrispondono alle mie properties di players[*]--> state
+  // a cui sovrascriverò il nome con newName, passando la funzione al componente
   function handlePlayerNameChanged(symbol, newName){
     setPlayers(prevPlayers => {
       return {
@@ -114,6 +122,7 @@ function App() {
             symbol="O"
             active={activePlayer === 'O'}
             onChangeName={handlePlayerNameChanged}
+            //passando questa funzione recupero il nuovo nome editato, per averlo nell'App principale
           />
         </ol>
         <section>
