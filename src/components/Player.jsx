@@ -1,12 +1,17 @@
 import { useState } from "react";
 
-export default function Player({name, symbol, active}){
+export default function Player({name, symbol, active, onChangeName}){
     const [ playerEdit , setPlayerEdit] = useState(name);
 
     const [isEditing, setIsEditing] = useState(false);
 
     function handleEditClick(){
         setIsEditing((isEditing) => !isEditing)
+        //se si sceglie di cambiare il nome si richiama la funziona per passare i dati
+        // dal componente figlio al padre
+        if(isEditing){
+            onChangeName(symbol,playerEdit)
+        }
         
     };
     // se lo state dipende da un value precedente, è altamente raccomandato passare una funziona come argomento

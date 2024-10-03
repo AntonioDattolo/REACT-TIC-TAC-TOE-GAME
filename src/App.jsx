@@ -28,6 +28,7 @@ function App() {
   //qui definiamo il tuo del giocatore , in uno state che poi 
   //passeremo ai componenti figli(Player/GameBoard)
   // const[activePlayer , setActivePlayer] = useState('X');
+  const [players, setPlayers] = useState({ 'X' : 'Player 1', 'O' : 'Player 2'})
 
   const [gameTurns, setGameTurns] = useState([]);
 
@@ -60,7 +61,7 @@ function App() {
       firstSymbolSquare === secondSymbolSquare &&
       firstSymbolSquare === thirdSymbolSquare)
       {
-        winner = firstSymbolSquare
+        winner = players[firstSymbolSquare]
       }
   }
 
@@ -89,6 +90,15 @@ function App() {
     setGameTurns([]);
   }
 
+  function handlePlayerNameChanged(symbol, newName){
+    setPlayers(prevPlayers => {
+      return {
+        ...prevPlayers,
+        [symbol] : newName
+      }
+    })
+  }
+
   return (
     <main>
       <div id="game-container">
@@ -97,11 +107,13 @@ function App() {
             name="player 1"
             symbol="X"
             active={activePlayer === 'X'}
+            onChangeName={handlePlayerNameChanged}
           />
           <Player
             name="player 2"
             symbol="O"
             active={activePlayer === 'O'}
+            onChangeName={handlePlayerNameChanged}
           />
         </ol>
         <section>
