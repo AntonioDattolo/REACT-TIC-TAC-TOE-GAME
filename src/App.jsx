@@ -33,7 +33,9 @@ function App() {
 
   const activePlayer = deriveActivePlayer(gameTurns);
 
-  let gameBoard = initialGameBoard;
+  let gameBoard = [...initialGameBoard.map(array =>[...array])];
+  // se invece usiamo gameBoard = initialGameBoard, l'array iniziale, verrò sovrascritto e
+  // perso durante la partita,impendendo il restart
   
   let winner;
 
@@ -62,7 +64,7 @@ function App() {
       }
   }
 
-  const draw = gameTurns === 9 && !winner;
+  const draw = gameTurns.length === 9 && !winner;
 
   function handleSelectSquare(rowIndex, colIndex){
     // se il player è x allora diventa o dopo l'aggiornamento di state
@@ -83,6 +85,10 @@ function App() {
     })
   }
 
+  function handleRestart(){
+    setGameTurns([]);
+  }
+
   return (
     <main>
       <div id="game-container">
@@ -99,7 +105,7 @@ function App() {
           />
         </ol>
         <section>
-          {(winner || draw) && <GameOver winner={winner}/>}
+          {(winner || draw) && <GameOver winner={winner} onRestart={handleRestart}/>}
           <GameBoard 
             onSelectSquare={handleSelectSquare}
             turns={gameTurns}
